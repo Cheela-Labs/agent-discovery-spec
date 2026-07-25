@@ -1,0 +1,101 @@
+{
+  "specVersion": "0.1.0",
+  "id": "com.example.support-agent",
+  "name": "Example Support Agent",
+  "description": "Handles order lookup, refunds, and escalation to a human agent.",
+  "provider": {
+    "name": "Example Inc.",
+    "url": "https://example.com",
+    "contact": "support-eng@example.com"
+  },
+  "lastUpdated": "2026-03-01T12:00:00Z",
+  "capabilities": [
+    {
+      "name": "com.example.lookupOrder",
+      "version": "1.2.0",
+      "description": "Look up an order by id and return its current status.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string" }
+        },
+        "required": ["orderId"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string" },
+          "items": { "type": "array" }
+        }
+      },
+      "endpoint": {
+        "transport": "http",
+        "address": "https://api.example.com/v1/orders/lookup",
+        "auth": "apiKey",
+        "authDetails": {
+          "headerName": "X-Api-Key"
+        }
+      }
+    },
+    {
+      "name": "com.example.issueRefund",
+      "version": "2.0.0",
+      "description": "Issue a refund for an order, subject to policy checks.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string" },
+          "amountCents": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["orderId", "amountCents"]
+      },
+      "endpoint": {
+        "transport": "http",
+        "address": "https://api.example.com/v2/refunds",
+        "auth": "oauth2",
+        "authDetails": {
+          "authorizationUrl": "https://auth.example.com/oauth2/authorize",
+          "tokenUrl": "https://auth.example.com/oauth2/token",
+          "scopes": ["refunds:write"]
+        }
+      }
+    },
+    {
+      "name": "com.example.legacyCancelOrder",
+      "version": "1.0.0",
+      "description": "Cancel an order before fulfillment. Superseded by com.example.issueRefund for post-fulfillment cases.",
+      "deprecated": true,
+      "deprecatedSince": "1.0.0",
+      "removalNotBefore": "2.0.0",
+      "endpoint": {
+        "transport": "http",
+        "address": "https://api.example.com/v1/orders/cancel",
+        "auth": "apiKey"
+      }
+    },
+    {
+      "name": "com.example.escalateToHuman",
+      "version": "1.0.0",
+      "description": "Hand off the conversation to a human support agent over the internal MCP bus.",
+      "endpoint": {
+        "transport": "mcp",
+        "address": "mcp://support-escalation.internal.example.com",
+        "auth": "mtls"
+      }
+    }
+  ],
+  "discovery": {
+    "cacheTtlSeconds": 3600,
+    "signature": {
+      "algorithm": "ed25519",
+      "value": "3n8f...redacted...a9c1",
+      "keyUrl": "https://example.com/.well-known/ads-signing-key.pub"
+    }
+  },
+  "extensions": {
+    "com.example.billing/1.0": {
+      "tier": "enterprise",
+      "rateLimitPerMinute": 600
+    }
+  }
+}

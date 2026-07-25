@@ -1,0 +1,11 @@
+{
+  "$comment": "First-come, first-served short namespace prefixes. See README.md in this directory for how to add an entry. Keep sorted alphabetically by prefix.",
+  "prefixes": [
+    {
+      "prefix": "cheela",
+      "owner": "Cheela Labs",
+      "contact": "https://cheelalabs.com",
+      "registeredDate": "2026-03-01"
+    }
+  ]
+}
