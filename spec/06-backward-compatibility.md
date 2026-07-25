@@ -59,9 +59,9 @@ through a migration window MAY serve version-pinned manifests alongside the
 default:
 
 ```text
-/.well-known/ai-discovery.json        → latest supported specVersion
-/.well-known/ai-discovery.v1.json     → pinned to the latest 1.x
-/.well-known/ai-discovery.v2.json     → pinned to the latest 2.x
+/.well-known/agent-discovery.json        → latest supported specVersion
+/.well-known/agent-discovery.v1.json     → pinned to the latest 1.x
+/.well-known/agent-discovery.v2.json     → pinned to the latest 2.x
 ```
 
 This is optional — a system MAY instead just run two MAJOR versions in
@@ -74,7 +74,7 @@ A system MAY support content negotiation for clients that want to state
 their supported range up front, via an `Accept` header parameter:
 
 ```text
-GET /.well-known/ai-discovery.json
+GET /.well-known/agent-discovery.json
 Accept: application/json; ads-version=^1.2
 ```
 

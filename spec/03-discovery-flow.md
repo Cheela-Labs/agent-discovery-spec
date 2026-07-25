@@ -14,7 +14,7 @@ order listed for its context, falling back to the next on failure.
 For any HTTP(S)-addressable system, the manifest **MUST** be available at:
 
 ```text
-GET https://{host}/.well-known/ai-discovery.json
+GET https://{host}/.well-known/agent-discovery.json
 ```
 
 Requirements:
@@ -40,7 +40,7 @@ For discovering a manifest location before making an HTTP connection (e.g.
 agent-to-agent discovery given only a domain name):
 
 ```text
-_ai-discovery.{domain}.  IN  TXT  "ads=https://example.com/.well-known/ai-discovery.json"
+_agent-discovery.{domain}.  IN  TXT  "ads=https://example.com/.well-known/agent-discovery.json"
 ```
 
 The `ads=` key's value is the manifest URL to fetch via mechanism 1. This
@@ -51,7 +51,7 @@ embedding the manifest directly impractical.
 
 For systems without a network address at discovery time (a CLI tool, a
 library, an embedded agent config), a manifest **MAY** be a plain file
-conventionally named `ai-discovery.json` at a location relevant to that
+conventionally named `agent-discovery.json` at a location relevant to that
 context (e.g. a project root). This document doesn't standardize *where*
 inline manifests live beyond the filename convention — that's inherently
 context-specific — but the manifest content itself follows the same schema.
@@ -63,7 +63,7 @@ sequenceDiagram
     participant Client
     participant System
 
-    Client->>System: GET /.well-known/ai-discovery.json
+    Client->>System: GET /.well-known/agent-discovery.json
     System-->>Client: 200 OK, application/json
 
     Note over Client: 1. Parse JSON

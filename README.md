@@ -1,9 +1,9 @@
-# AI Discovery Specification (ADS)
+# Agent Discovery Specification (ADS)
 
 **Status:** Draft · **Spec version:** 0.1.0 · **License:** MIT
 
 A small, open, provider-agnostic specification for discovering what an
-AI-addressable system can do — its capabilities, how to invoke them, what
+agent-addressable system can do — its capabilities, how to invoke them, what
 they require, and how to keep asking that question safely as the system
 changes over time.
 
@@ -21,7 +21,7 @@ protocol, and every agent framework invents its own registration format.
 None of them agree, and none of them are meant to be discovered *before* you've
 already committed to that provider's SDK.
 
-The AI Discovery Specification defines one thing, and only one thing: a
+The Agent Discovery Specification defines one thing, and only one thing: a
 **capability manifest** — a small, versioned, self-describing document — and
 the **discovery flow** for finding it. It does not define how you invoke a
 capability once you've found it (that's a transport concern — HTTP, MCP,
@@ -50,7 +50,7 @@ client and the system still agree on what any of that means.
 ## The shape of it, in one example
 
 A conformant system serves a manifest, typically at
-`/.well-known/ai-discovery.json`:
+`/.well-known/agent-discovery.json`:
 
 ```jsonc
 {

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the AI Discovery Specification are documented here.
+All notable changes to the Agent Discovery Specification are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning follows the rules in
 [spec/04-versioning-strategy.md](spec/04-versioning-strategy.md).
@@ -21,7 +21,7 @@ deprecation window while the spec stabilizes, per the pre-1.0 note in
   [06-backward-compatibility](spec/06-backward-compatibility.md)
 - Normative JSON Schema at `spec/schema/manifest.schema.json`, with a
   minimal and a full-featured example under `spec/schema/examples/`
-- HTTP well-known discovery (`/.well-known/ai-discovery.json`), DNS TXT
+- HTTP well-known discovery (`/.well-known/agent-discovery.json`), DNS TXT
   record discovery, and inline/local discovery mechanisms
 - Namespace registry (`registry/`) for short capability/extension prefixes
 - ADS proposal process (`proposals/0000-process.md`) and template

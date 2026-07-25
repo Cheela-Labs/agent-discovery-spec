@@ -12,10 +12,10 @@ NOT**, and **MAY** in this document are to be interpreted as described in
 
 ## What this specification is
 
-The AI Discovery Specification (ADS) defines two things:
+The Agent Discovery Specification (ADS) defines two things:
 
 1. A **capability manifest** format — a small, self-describing, versioned
-   JSON document that says what an AI-addressable system can do.
+   JSON document that says what an agent-addressable system can do.
 2. A **discovery flow** — how a client finds that manifest, without prior
    out-of-band knowledge beyond an entry point (a URL, a domain name, or a
    local path).

@@ -59,7 +59,7 @@ decision process either.
 
 ## Trademark and implementation conformance
 
-"AI Discovery Specification" and "ADS" describe the specification text
+"Agent Discovery Specification" and "ADS" describe the specification text
 itself. There is no certification program, no conformance mark, and no
 trademark gate on calling an implementation "ADS-conformant" — if it
 satisfies the MUST requirements in `spec/`, it's conformant, full stop. If a

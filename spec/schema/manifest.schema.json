@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ai-discovery-spec.org/schema/0.1.0/manifest.schema.json",
-  "title": "AI Discovery Specification — Capability Manifest",
+  "$id": "https://agent-discovery-spec.org/schema/0.1.0/manifest.schema.json",
+  "title": "Agent Discovery Specification — Capability Manifest",
   "description": "Normative schema for the ADS Core capability manifest. See spec/02-manifest-schema.md for field-by-field prose.",
   "type": "object",
   "required": ["specVersion", "id", "name", "provider", "capabilities"],
