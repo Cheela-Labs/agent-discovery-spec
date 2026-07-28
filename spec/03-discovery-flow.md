@@ -19,6 +19,13 @@ GET https://{host}/.well-known/agent-discovery.json
 
 Requirements:
 
+- The request **MUST** use `https`. A client **MUST NOT** fetch a manifest
+  over plaintext `http`, and **MUST NOT** downgrade to `http` on TLS
+  failure. A manifest names the endpoints an agent will subsequently call
+  and the auth scheme it will present to them; served over a channel an
+  attacker can rewrite, it is a redirection primitive. The single exception
+  is a loopback host (`localhost`, `127.0.0.0/8`, `[::1]`) during local
+  development, where no network attacker is present.
 - Response **MUST** be served with `Content-Type: application/json` (or a
   `+json` structured suffix).
 - Response **MUST** be valid JSON conforming to
@@ -29,6 +36,33 @@ Requirements:
 - CORS: if the manifest is meant to be discoverable from browser-based
   clients, the server **SHOULD** send `Access-Control-Allow-Origin: *` — a
   manifest is a public discovery document, not a protected resource.
+
+#### Redirects
+
+A client **MUST** apply the following rules to any `3xx` response on the
+well-known path:
+
+- A redirect whose target is **same-origin** (identical scheme, host and
+  port, per [RFC 6454](https://www.rfc-editor.org/rfc/rfc6454.html))
+  **MUST** be followed. This is ordinary infrastructure — path
+  normalization, trailing-slash canonicalization, a CDN rewrite.
+- A redirect whose target is **cross-origin** **MUST NOT** be followed
+  silently. The client **MUST** either fail discovery, or surface the
+  target origin to the caller for an explicit trust decision. It **MUST
+  NOT** transparently adopt the manifest as if it were served by the
+  original origin.
+- A client **MUST** limit redirect chains to **5** hops and fail discovery
+  beyond that.
+- After following any redirect, the origin a client attributes the manifest
+  to is the origin it **originally requested**, never the final origin in
+  the chain.
+
+The cross-origin rule is the load-bearing one. Discovery answers "what can
+*this* origin do," so if `example.com` can hand off to `attacker.example`
+and have the result attributed to `example.com`, the manifest no longer
+means anything. A system that genuinely wants to delegate should say so in
+the manifest it serves itself, not through an HTTP redirect the client
+cannot evaluate.
 
 This is the mechanism most implementations need and the only one Core
 conformance requires supporting as a *server*. Clients **MUST** support
@@ -46,6 +80,21 @@ _agent-discovery.{domain}.  IN  TXT  "ads=https://example.com/.well-known/agent-
 The `ads=` key's value is the manifest URL to fetch via mechanism 1. This
 record is a pointer, not the manifest itself — TXT record size limits make
 embedding the manifest directly impractical.
+
+Because the pointer is arbitrary, it carries the same hazard as a
+cross-origin redirect and the same rules apply:
+
+- The `ads=` value **MUST** be an `https` URL.
+- If its origin does not match the domain the client started from, the
+  client **MUST NOT** follow it silently — fail, or surface the target for
+  an explicit trust decision.
+- A client **MUST** ignore malformed records and records with more than one
+  `ads=` key rather than picking one arbitrarily.
+
+Clients **SHOULD** prefer mechanism 1 when both are available. Unauthenticated
+DNS is a weaker channel than TLS: without DNSSEC, a TXT record is spoofable
+by anyone who can answer the query, and a client that trusts the pointer over
+the well-known path has downgraded its own trust model for no benefit.
 
 ### 3. Inline/local discovery (offline and embedded contexts)
 
@@ -139,6 +188,11 @@ implementation concerns, not specified here.
 | Situation | Client behavior |
 |---|---|
 | `404` on the well-known path | System does not support ADS discovery. Not an error condition for the client to alarm on — just "unsupported." |
+| Plaintext `http` URL, non-loopback | Discovery fails before any request is made. Do not fetch and then complain. |
+| Same-origin `3xx` | Follow, up to 5 hops total. |
+| Cross-origin `3xx` | Do not follow silently. Fail, or surface the target origin for an explicit trust decision. |
+| Redirect chain exceeds 5 hops | Discovery fails. |
+| DNS `ads=` pointer to a different origin | Same as cross-origin redirect — not followed silently. |
 | Malformed JSON | Discovery fails. Do not attempt partial parsing. |
 | Valid JSON, fails schema validation | Discovery fails. Do not attempt to use partial/best-guess fields. |
 | Valid manifest, unrecognized `specVersion` MAJOR | Discovery fails with a clear "incompatible version" signal, not a silent no-op. |
