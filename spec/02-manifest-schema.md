@@ -31,6 +31,7 @@ they disagree on structure, the JSON Schema wins.
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `name` | string | **Yes** | Namespaced capability name (e.g. `com.example.lookupOrder`). MUST follow the namespacing rules in [05-extensibility.md](05-extensibility.md). |
+| `invocationName` | string | No | Identifier to use where `name` cannot be, such as an LLM tool-calling API. Presentation only — `name` remains the identity. See [below](#invocationname). |
 | `version` | string (SemVer) | **Yes** | Version of this specific capability's contract — independent of `specVersion`. Bump this when `inputSchema`/`outputSchema`/behavior changes, not when the manifest wrapper changes. |
 | `description` | string | No | Human-readable summary. |
 | `inputSchema` | object (JSON Schema) | No | JSON Schema describing valid input to this capability. Absence means "consult the transport/endpoint documentation" — not "no input." |
@@ -39,6 +40,32 @@ they disagree on structure, the JSON Schema wins.
 | `deprecated` | boolean | No | Defaults to `false`. See [06-backward-compatibility.md](06-backward-compatibility.md) for the full deprecation lifecycle. |
 | `deprecatedSince` | string (SemVer) | Required if `deprecated: true` | The capability `version` at which deprecation was announced. |
 | `removalNotBefore` | string (SemVer) | No | The earliest capability `version` at which this MAY be removed. |
+
+#### `invocationName`
+
+`name` is required to contain at least one dot. Most LLM tool-calling APIs
+constrain function names to `^[a-zA-Z0-9_-]{1,64}$` and reject a dot outright,
+so a conformant `name` can never be passed to one directly. `invocationName`
+carries the identifier to use in those places.
+
+When present it MUST match `^[A-Za-z][A-Za-z0-9_-]{0,63}$` and MUST be unique
+across all capabilities in the manifest.
+
+When absent, a client that needs a constrained identifier MUST derive one by
+replacing every `.` in `name` with `-`, and MUST NOT derive one by truncating
+`name` to a subset of its segments. Truncation is prohibited because two
+capabilities in one manifest may share a leaf segment — `com.example.orders.get`
+and `com.example.refunds.get` both truncate to `get` — and a client that
+truncates maps them to the same identifier without detecting the collision.
+
+If the derived identifier exceeds 64 characters, a client MUST treat the
+capability as not invocable through that interface and SHOULD surface the
+reason, rather than truncating to fit.
+
+`invocationName` carries no identity and MUST NOT be used for authorization,
+routing, or capability lookup; a client resolving an incoming tool call back to
+a capability MUST do so via `name`. Two manifests describing the same capability
+MUST agree on `name`; they need not agree on `invocationName`.
 
 #### `endpoint`
 

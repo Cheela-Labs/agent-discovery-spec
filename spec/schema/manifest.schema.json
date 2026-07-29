@@ -1,10 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agent-discovery-spec.org/schema/0.1.0/manifest.schema.json",
-  "title": "Agent Discovery Specification — Capability Manifest",
+  "$id": "https://agent-discovery-spec.org/schema/0.3.0/manifest.schema.json",
+  "title": "Agent Discovery Specification \u2014 Capability Manifest",
   "description": "Normative schema for the ADS Core capability manifest. See spec/02-manifest-schema.md for field-by-field prose.",
   "type": "object",
-  "required": ["specVersion", "id", "name", "provider", "capabilities"],
+  "required": [
+    "specVersion",
+    "id",
+    "name",
+    "provider",
+    "capabilities"
+  ],
   "additionalProperties": true,
   "properties": {
     "specVersion": {
@@ -29,7 +35,9 @@
     },
     "capabilities": {
       "type": "array",
-      "items": { "$ref": "#/$defs/capability" }
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
     },
     "discovery": {
       "$ref": "#/$defs/discovery"
@@ -42,7 +50,7 @@
     "lastUpdated": {
       "type": "string",
       "format": "date-time",
-      "description": "Advisory only — not a substitute for discovery.cacheTtlSeconds or HTTP caching."
+      "description": "Advisory only \u2014 not a substitute for discovery.cacheTtlSeconds or HTTP caching."
     }
   },
   "$defs": {
@@ -57,47 +65,99 @@
     },
     "provider": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": true,
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "url": { "type": "string", "format": "uri" },
-        "contact": { "type": "string" }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "contact": {
+          "type": "string"
+        }
       }
     },
     "capability": {
       "type": "object",
-      "required": ["name", "version", "endpoint"],
+      "required": [
+        "name",
+        "version",
+        "endpoint"
+      ],
       "additionalProperties": true,
       "properties": {
-        "name": { "$ref": "#/$defs/namespacedName" },
-        "version": { "$ref": "#/$defs/semver" },
-        "description": { "type": "string" },
-        "inputSchema": { "type": "object" },
-        "outputSchema": { "type": "object" },
-        "endpoint": { "$ref": "#/$defs/endpoint" },
-        "deprecated": { "type": "boolean", "default": false },
-        "deprecatedSince": { "$ref": "#/$defs/semver" },
-        "removalNotBefore": { "$ref": "#/$defs/semver" }
+        "name": {
+          "$ref": "#/$defs/namespacedName"
+        },
+        "invocationName": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+          "description": "Identifier to use when exposing this capability to a system with a constrained identifier syntax, such as an LLM tool-calling API. Presentation only; `name` remains the identity. See spec/02-manifest-schema.md."
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "description": {
+          "type": "string"
+        },
+        "inputSchema": {
+          "type": "object"
+        },
+        "outputSchema": {
+          "type": "object"
+        },
+        "endpoint": {
+          "$ref": "#/$defs/endpoint"
+        },
+        "deprecated": {
+          "type": "boolean",
+          "default": false
+        },
+        "deprecatedSince": {
+          "$ref": "#/$defs/semver"
+        },
+        "removalNotBefore": {
+          "$ref": "#/$defs/semver"
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": { "deprecated": { "const": true } },
-            "required": ["deprecated"]
+            "properties": {
+              "deprecated": {
+                "const": true
+              }
+            },
+            "required": [
+              "deprecated"
+            ]
           },
-          "then": { "required": ["deprecatedSince"] }
+          "then": {
+            "required": [
+              "deprecatedSince"
+            ]
+          }
         }
       ]
     },
     "endpoint": {
       "type": "object",
-      "required": ["transport", "address", "auth"],
+      "required": [
+        "transport",
+        "address",
+        "auth"
+      ],
       "additionalProperties": true,
       "properties": {
         "transport": {
           "type": "string",
-          "description": "Well-known: http, grpc, mcp, queue. Open string — unrecognized values MUST be skipped by clients, not treated as invalid.",
+          "description": "Well-known: http, grpc, mcp, queue. Open string \u2014 unrecognized values MUST be skipped by clients, not treated as invalid.",
           "minLength": 1
         },
         "address": {
@@ -126,11 +186,21 @@
         "signature": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["algorithm", "value"],
+          "required": [
+            "algorithm",
+            "value"
+          ],
           "properties": {
-            "algorithm": { "type": "string" },
-            "value": { "type": "string" },
-            "keyUrl": { "type": "string", "format": "uri" }
+            "algorithm": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            },
+            "keyUrl": {
+              "type": "string",
+              "format": "uri"
+            }
           }
         }
       }

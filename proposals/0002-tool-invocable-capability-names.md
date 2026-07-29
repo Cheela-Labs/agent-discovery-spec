@@ -1,7 +1,7 @@
 ---
-ads:
+ads: 2
 title: Tool-invocable capability names
-status: Draft
+status: Final
 type: Core
 author: Cheela Labs
 created: 2026-07-29

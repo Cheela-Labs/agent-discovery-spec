@@ -5,6 +5,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning follows the rules in
 [spec/04-versioning-strategy.md](spec/04-versioning-strategy.md).
 
+## [0.3.0] — 2026-07-29
+
+Adds `invocationName`, resolving a conflict between capability names and every
+major LLM tool-calling API. No breaking changes — every manifest valid under
+0.2.0 remains valid under 0.3.0.
+
+### Added
+
+- `capabilities[].invocationName` — the identifier to use where `name` cannot
+  be. `name` is required to contain a dot; OpenAI, Anthropic, Google and every
+  OpenAI-compatible endpoint constrain tool function names to
+  `^[a-zA-Z0-9_-]{1,64}$` and reject a dot outright, so no conformant `name`
+  could ever be passed to one. Optional, presentation only — `name` remains the
+  sole identity. See [ADS-2](proposals/0002-tool-invocable-capability-names.md).
+
+- A normative derivation rule for clients that need a constrained identifier and
+  find no `invocationName`: replace dots with hyphens, never truncate to a
+  subset of segments. Clients were already deriving one and disagreeing —
+  last segment, dot replacement, last two segments — so the same manifest
+  produced different tool names in different clients. Truncation is now
+  prohibited rather than discouraged, because two capabilities in one manifest
+  may share a leaf segment and a truncating client maps them to the same
+  identifier silently.
+
+### Changed
+
+- `spec/schema/manifest.schema.json` `$id` now carries the current version. It
+  had read `0.1.0` since that release; 0.2.0 changed no schema so it went
+  unnoticed.
+
 ## [0.2.0] — 2026-07-29
 
 Hardens the discovery flow and adds the Security Considerations document.
