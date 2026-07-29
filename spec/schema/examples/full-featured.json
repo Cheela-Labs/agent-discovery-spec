@@ -1,5 +1,5 @@
 {
-  "specVersion": "0.1.0",
+  "specVersion": "0.3.0",
   "id": "com.example.support-agent",
   "name": "Example Support Agent",
   "description": "Handles order lookup, refunds, and escalation to a human agent.",

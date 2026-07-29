@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning follows the rules in
 [spec/04-versioning-strategy.md](spec/04-versioning-strategy.md).
 
+## [0.3.1] — 2026-07-29
+
+Editorial. No normative change; no manifest or client is affected.
+
+### Fixed
+
+- The schema examples declared `specVersion: 0.1.0`. They had gone unrevised
+  through two releases, so anyone copying one as a starting point began on a
+  version two bumps behind.
+
 ## [0.3.0] — 2026-07-29
 
 Adds `invocationName`, resolving a conflict between capability names and every
