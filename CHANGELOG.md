@@ -46,7 +46,7 @@ valid under 0.1.0 remains valid under 0.2.0.
   manifest from your own origin rather than via cross-origin redirect.
 - Clients: add the `https` check, the redirect rules, and the 5-hop cap.
 
-## [0.1.0] — 2026-03-01
+## [0.1.0] — 2026-07-25
 
 Initial draft release. Not yet `1.0.0` — expect breaking changes without a
 deprecation window while the spec stabilizes, per the pre-1.0 note in
