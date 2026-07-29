@@ -5,6 +5,47 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning follows the rules in
 [spec/04-versioning-strategy.md](spec/04-versioning-strategy.md).
 
+## [0.2.0] — 2026-07-29
+
+Hardens the discovery flow and adds the Security Considerations document.
+**Contains breaking changes**, permitted pre-1.0 per the
+[pre-1.0 note](spec/04-versioning-strategy.md#pre-10-note) and called out
+explicitly here as that rule requires. No schema change — every manifest
+valid under 0.1.0 remains valid under 0.2.0.
+
+### Added
+
+- [spec/07-security-considerations.md](spec/07-security-considerations.md) —
+  threat model, manifests as untrusted input, transport as the primary
+  integrity control, origin attribution, server-side disclosure, automated
+  discovery as an injection channel, signature verification, privacy, and
+  explicit out-of-scope boundaries. Required for well-known URI registration
+  under [RFC 8615 §4](https://www.rfc-editor.org/rfc/rfc8615.html#section-4).
+- Normative redirect handling on the well-known path: same-origin followed,
+  cross-origin never followed silently, 5-hop cap, manifest always attributed
+  to the origin originally requested.
+- Six error-handling rows covering plaintext URLs, redirect outcomes, hop
+  exhaustion, and cross-origin DNS pointers.
+- `ietf/well-known-registration.md` — draft IANA registration template for
+  `agent-discovery.json`. Not submitted; see the blockers in that file.
+
+### Changed
+
+- **Breaking.** Manifest fetches now **MUST** use `https`. Plaintext `http`
+  on a non-loopback host is no longer conformant, and clients **MUST NOT**
+  downgrade on TLS failure. Loopback hosts are exempt for local development.
+- **Breaking.** The DNS `ads=` pointer **MUST** be `https` and is subject to
+  the cross-origin rule. Malformed and multi-`ads=` records **MUST** be
+  ignored rather than arbitrarily resolved. Clients **SHOULD** prefer the
+  well-known path where both exist.
+
+### Migration
+
+- Manifests: no action.
+- Servers: move any non-loopback plaintext manifest to `https`; serve the
+  manifest from your own origin rather than via cross-origin redirect.
+- Clients: add the `https` check, the redirect rules, and the 5-hop cap.
+
 ## [0.1.0] — 2026-03-01
 
 Initial draft release. Not yet `1.0.0` — expect breaking changes without a

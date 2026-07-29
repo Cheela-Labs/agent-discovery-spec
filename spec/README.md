@@ -1,6 +1,6 @@
 # ADS Core Specification
 
-Current version: **0.1.0** (`Draft`)
+Current version: **0.2.0** (`Draft`)
 
 This directory is the normative specification text. Read in order if you're
 new:
@@ -11,6 +11,7 @@ new:
 4. [04-versioning-strategy.md](04-versioning-strategy.md) — the three version numbers and what bumps each
 5. [05-extensibility.md](05-extensibility.md) — namespacing, `extensions`, the namespace registry
 6. [06-backward-compatibility.md](06-backward-compatibility.md) — deprecation policy, the additive-evolution rule
+7. [07-security-considerations.md](07-security-considerations.md) — threat model, transport requirements, what a client must not trust
 
 Machine-readable schema and examples: [schema/](schema/).
 
