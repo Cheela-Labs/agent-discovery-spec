@@ -4,7 +4,7 @@ title: ADS Proposal Process
 status: Living
 type: Meta
 author: Agent Discovery Specification Contributors
-created: 2026-03-01
+created: 2026-07-25
 ---
 
 ## Summary
