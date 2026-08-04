@@ -1,6 +1,6 @@
 # Agent Discovery Specification (ADS)
 
-**Status:** Draft · **Spec version:** 0.1.0 · **License:** MIT
+**Status:** Draft · **Spec version:** 0.3.0 · **License:** MIT
 
 A small, open, provider-agnostic specification for discovering what an
 agent-addressable system can do — its capabilities, how to invoke them, what
@@ -9,6 +9,12 @@ changes over time.
 
 If you've ever wanted `/.well-known/openid-configuration`, but for "what can
 this agent, runtime, or tool server actually do" — this is that document.
+
+### → [Implement ADS in 10 minutes](https://blogs.cheelalabs.com/agent-discovery-quickstart)
+
+Serve a manifest, validate it against the schema in this repo, and hand it to an
+LLM tool-calling API. No account, no dependencies beyond Python. If you are here
+to implement rather than to read, start there and come back.
 
 ---
 
@@ -54,7 +60,7 @@ A conformant system serves a manifest, typically at
 
 ```jsonc
 {
-  "specVersion": "0.1.0",
+  "specVersion": "0.3.0",
   "id": "com.example.support-agent",
   "name": "Example Support Agent",
   "description": "Handles order lookup and refund requests.",
@@ -62,6 +68,7 @@ A conformant system serves a manifest, typically at
   "capabilities": [
     {
       "name": "com.example.lookupOrder",
+      "invocationName": "lookup_order",
       "version": "1.0.0",
       "description": "Look up an order by id.",
       "inputSchema": { "type": "object", "properties": { "orderId": { "type": "string" } }, "required": ["orderId"] },
@@ -78,6 +85,10 @@ understands, picks a capability by name and version, and calls whatever
 [spec/03-discovery-flow.md](spec/03-discovery-flow.md) for the full version,
 including non-HTTP discovery and caching rules.
 
+`name` is the identity and must be namespaced; `invocationName` is what you pass
+to an LLM tool-calling API, which will reject the dot in `name`. See
+[ADS-2](proposals/0002-tool-invocable-capability-names.md).
+
 ## Reading the spec
 
 | Document | What it covers |
@@ -88,6 +99,7 @@ including non-HTTP discovery and caching rules.
 | [spec/04-versioning-strategy.md](spec/04-versioning-strategy.md) | SemVer rules for the spec, manifests, and individual capabilities |
 | [spec/05-extensibility.md](spec/05-extensibility.md) | Namespacing, the `extensions` block, the namespace registry |
 | [spec/06-backward-compatibility.md](spec/06-backward-compatibility.md) | Deprecation policy, multi-version serving, the additive-evolution rule |
+| [spec/07-security-considerations.md](spec/07-security-considerations.md) | Threat model, manifests as untrusted input, transport integrity, origin attribution |
 | [spec/schema/manifest.schema.json](spec/schema/manifest.schema.json) | The normative JSON Schema |
 | [proposals/](proposals/) | The ADS proposal process — how the spec itself changes |
 
